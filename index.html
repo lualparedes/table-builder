@@ -4,7 +4,7 @@
   <base target="_top">
   <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
   <style>
-    form {
+    .form {
       padding: 25px;
     }
     label {
@@ -16,7 +16,7 @@
 
 <body>
 
-<form>
+<div class="form">
   <label for="table-type">Table type</label>
   <select name="table-type" id="table-type">
     <option value="standard">Standard</option>
@@ -25,14 +25,21 @@
   </select> 
   <br><br>
   <label for="rows">Rows</label>
-  <input name="rows" type="text">
+  <input id="rows" name="rows" type="text">
   <br><br>
   <label for="columns">Columns</label>
-  <input name="columns" type="text">
+  <input id="columns" name="columns" type="text">
   <br><br>
-  <button class="action">Create table</button>
-</form>
+  <button 
+    class="action" 
+    onclick="google.script.run.insertTable(
+      document.getElementById('rows').value, 
+      document.getElementById('columns').value, 
+      document.getElementById('table-type').value
+    );"
+  >
+    Create table
+  </button>
+</div>
 </body>
 </html>
-
-
