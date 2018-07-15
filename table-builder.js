@@ -1,9 +1,12 @@
+////////////////////////////////////////////////////////////////////////////////
+// UI
+////////////////////////////////////////////////////////////////////////////////
+
 function onOpen(e) {
   DocumentApp.getUi().createAddonMenu()
     .addItem('Create table', 'showSidebar')
     .addToUi();
 }
-
 
 function showSidebar() {
   var ui = HtmlService.createHtmlOutputFromFile('sidebar')
@@ -12,8 +15,12 @@ function showSidebar() {
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+// Table builder
+////////////////////////////////////////////////////////////////////////////////
+
 function createTableArr(rows, cols) {
-  
+
   var tableArr = [];
 
   for (var r = rows; r > 0; r--) {    
@@ -27,14 +34,64 @@ function createTableArr(rows, cols) {
   return tableArr;
 }
 
-
-function insertTable(rows, cols, type) {
-
-  var rows = rows > 0 ? rows : 1;
-  var cols = cols > 0 ? cols : 1;
+function buildTable(rows, cols) {
+  var tableArr = createTableArr(rows, cols);
   var body = DocumentApp.getActiveDocument().getBody();
 
-  var tableArr = createTableArr(rows, cols);
-  
   return body.appendTable(tableArr);
+}
+
+function styleTableHeader(header, bgColor, fgColor) {
+
+  var attrHeader = {};
+      attrHeader[DocumentApp.Attribute.BOLD] = true;
+      attrHeader[DocumentApp.Attribute.FOREGROUND_COLOR] = fgColor;
+
+  var cell;
+  var c = header.getNumChildren();
+
+  for (var i = c-1; i >= 0; i--) {
+    cell = header.getChild(i);
+    cell.setBackgroundColor(bgColor);     
+  }
+
+  header.setAttributes(attrHeader);
+}
+
+function styleTable(table, type) {
+
+  var headerBgColor, headerFgColor;
+  var borderColor, fontFamily, fgColor;
+  var attrTable = {};
+  
+  if (type === 'standard') {
+    headerBgColor = '#f3f3f3';
+    headerFgColor = '#434343';
+    fontFamily = 'Roboto';
+    borderColor = '#b7b7b7';
+    fgColor = '#434343';
+  }
+
+  if (type === 'contents') {
+    headerBgColor = '#4e9dff';
+    headerFgColor = '#ffffff';
+    fontFamily = 'Roboto';
+    borderColor = '#3d7bc8';
+    fgColor = '#434343';
+  }
+
+  attrTable[DocumentApp.Attribute.FONT_SIZE] = 12;
+  attrTable[DocumentApp.Attribute.FONT_FAMILY] = fontFamily;
+  attrTable[DocumentApp.Attribute.BORDER_COLOR] = borderColor;
+  attrTable[DocumentApp.Attribute.FOREGROUND_COLOR] = fgColor;
+  table.setAttributes(attrTable);
+
+  styleTableHeader(table.getRow(0), headerBgColor, headerFgColor);
+}
+
+function insertTable(rows, cols, type) {
+  var rows = rows > 0 ? rows : 1;
+  var cols = cols > 0 ? cols : 1;
+  var table = buildTable(rows, cols);
+  styleTable(table, type);
 }
