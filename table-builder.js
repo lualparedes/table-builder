@@ -41,10 +41,10 @@ function buildTable(rows, cols) {
   return body.appendTable(tableArr);
 }
 
-function styleTableHeader(header, bgColor, fgColor) {
+function styleTableHeader(header, bgColor, fgColor, bold) {
 
   var attrHeader = {};
-      attrHeader[DocumentApp.Attribute.BOLD] = true;
+      attrHeader[DocumentApp.Attribute.BOLD] = bold;
       attrHeader[DocumentApp.Attribute.FOREGROUND_COLOR] = fgColor;
 
   var cell;
@@ -60,13 +60,14 @@ function styleTableHeader(header, bgColor, fgColor) {
 
 function styleTable(table, type) {
 
-  var headerBgColor, headerFgColor;
+  var headerBgColor, headerFgColor, headerBold;
   var borderColor, fontFamily, fgColor;
   var attrTable = {};
   
   if (type === 'standard') {
     headerBgColor = '#f3f3f3';
     headerFgColor = '#434343';
+    headerBold = true;
     fontFamily = 'Roboto';
     borderColor = '#b7b7b7';
     fgColor = '#434343';
@@ -75,9 +76,28 @@ function styleTable(table, type) {
   if (type === 'contents') {
     headerBgColor = '#4e9dff';
     headerFgColor = '#ffffff';
+    headerBold = true;
     fontFamily = 'Roboto';
     borderColor = '#3d7bc8';
     fgColor = '#434343';
+  }
+
+  if (type === 'code') {
+    headerBgColor = '#f3f3f3';
+    headerFgColor = '#434343';
+    headerBold = false;
+    fontFamily = 'Roboto Mono';
+    borderColor = '#f3f3f3';
+    fgColor = '#434343';
+  }
+
+  if (type === 'code-dark') {
+    headerBgColor = '#666666';
+    headerFgColor = '#ffffff';
+    headerBold = false;
+    fontFamily = 'Roboto Mono';
+    borderColor = '#666666';
+    fgColor = '#ffffff';
   }
 
   attrTable[DocumentApp.Attribute.FONT_SIZE] = 12;
@@ -86,7 +106,7 @@ function styleTable(table, type) {
   attrTable[DocumentApp.Attribute.FOREGROUND_COLOR] = fgColor;
   table.setAttributes(attrTable);
 
-  styleTableHeader(table.getRow(0), headerBgColor, headerFgColor);
+  styleTableHeader(table.getRow(0), headerBgColor, headerFgColor, headerBold);
 }
 
 function insertTable(rows, cols, type) {
