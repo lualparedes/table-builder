@@ -35,10 +35,15 @@ function createTableArr(rows, cols) {
 }
 
 function buildTable(rows, cols) {
+  
   var tableArr = createTableArr(rows, cols);
-  var body = DocumentApp.getActiveDocument().getBody();
 
-  return body.appendTable(tableArr);
+  var doc = DocumentApp.getActiveDocument();
+  var body = doc.getBody();
+  var cursorEl = doc.getCursor().getElement();
+  var parent = cursorEl.getParent();
+
+  return body.insertTable(parent.getChildIndex(cursorEl) + 1, tableArr);
 }
 
 function styleTableHeader(header, bgColor, fgColor, bold) {
